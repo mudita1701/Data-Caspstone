@@ -1,0 +1,356 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "pd.set_option('display.max_columns', None)\n",
+    "pd.set_option('display.max_rows', None)\n",
+    "pd.set_option('display.max_columns', 100)\n",
+    "pd.set_option('display.width',1000)\n",
+    "import matplotlib.cm as cm            # Matplotlib and associated plotting modules\n",
+    "import matplotlib.colors as colors\n",
+    "from sklearn.cluster import KMeans   # import k-means from clustering stage\n",
+    "import folium                        # map rendering library\n",
+    "from geopy.geocoders import Nominatim\n",
+    "import webbrowser\n",
+    "import json # library to handle JSON files\n",
+    "import requests # library to handle requests\n",
+    "from pandas.io.json import json_normalize"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#h1 PART1- improting data for canada postal codes in the required format"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#read data from the webpage\n",
+    "url = 'https://en.wikipedia.org/wiki/List_of_postal_codes_of_Canada:_M'\n",
+    "df1 = pd.read_html(url)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#check datatype for df1\n",
+    "type(df1)\n",
+    "df1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[               0                 1                                                  2\n",
+       " 0    Postal Code           Borough                                      Neighbourhood\n",
+       " 1            M1A      Not assigned                                       Not assigned\n",
+       " 2            M2A      Not assigned                                       Not assigned\n",
+       " 3            M3A        North York                                          Parkwoods\n",
+       " 4            M4A        North York                                   Victoria Village\n",
+       " 5            M5A  Downtown Toronto                          Regent Park, Harbourfront\n",
+       " 6            M6A        North York                   Lawrence Manor, Lawrence Heights\n",
+       " 7            M7A  Downtown Toronto        Queen's Park, Ontario Provincial Government\n",
+       " 8            M8A      Not assigned                                       Not assigned\n",
+       " 9            M9A         Etobicoke            Islington Avenue, Humber Valley Village\n",
+       " 10           M1B       Scarborough                                     Malvern, Rouge\n",
+       " 11           M2B      Not assigned                                       Not assigned\n",
+       " 12           M3B        North York                                          Don Mills\n",
+       " 13           M4B         East York                    Parkview Hill, Woodbine Gardens\n",
+       " 14           M5B  Downtown Toronto                           Garden District, Ryerson\n",
+       " 15           M6B        North York                                          Glencairn\n",
+       " 16           M7B      Not assigned                                       Not assigned\n",
+       " 17           M8B      Not assigned                                       Not assigned\n",
+       " 18           M9B         Etobicoke  West Deane Park, Princess Gardens, Martin Grov...\n",
+       " 19           M1C       Scarborough             Rouge Hill, Port Union, Highland Creek\n",
+       " 20           M2C      Not assigned                                       Not assigned\n",
+       " 21           M3C        North York                                          Don Mills\n",
+       " 22           M4C         East York                                   Woodbine Heights\n",
+       " 23           M5C  Downtown Toronto                                     St. James Town\n",
+       " 24           M6C              York                                 Humewood-Cedarvale\n",
+       " 25           M7C      Not assigned                                       Not assigned\n",
+       " 26           M8C      Not assigned                                       Not assigned\n",
+       " 27           M9C         Etobicoke  Eringate, Bloordale Gardens, Old Burnhamthorpe...\n",
+       " 28           M1E       Scarborough                  Guildwood, Morningside, West Hill\n",
+       " 29           M2E      Not assigned                                       Not assigned\n",
+       " 30           M3E      Not assigned                                       Not assigned\n",
+       " 31           M4E      East Toronto                                        The Beaches\n",
+       " 32           M5E  Downtown Toronto                                        Berczy Park\n",
+       " 33           M6E              York                                Caledonia-Fairbanks\n",
+       " 34           M7E      Not assigned                                       Not assigned\n",
+       " 35           M8E      Not assigned                                       Not assigned\n",
+       " 36           M9E      Not assigned                                       Not assigned\n",
+       " 37           M1G       Scarborough                                             Woburn\n",
+       " 38           M2G      Not assigned                                       Not assigned\n",
+       " 39           M3G      Not assigned                                       Not assigned\n",
+       " 40           M4G         East York                                            Leaside\n",
+       " 41           M5G  Downtown Toronto                                 Central Bay Street\n",
+       " 42           M6G  Downtown Toronto                                           Christie\n",
+       " 43           M7G      Not assigned                                       Not assigned\n",
+       " 44           M8G      Not assigned                                       Not assigned\n",
+       " 45           M9G      Not assigned                                       Not assigned\n",
+       " 46           M1H       Scarborough                                          Cedarbrae\n",
+       " 47           M2H        North York                                  Hillcrest Village\n",
+       " 48           M3H        North York    Bathurst Manor, Wilson Heights, Downsview North\n",
+       " 49           M4H         East York                                   Thorncliffe Park\n",
+       " 50           M5H  Downtown Toronto                           Richmond, Adelaide, King\n",
+       " 51           M6H      West Toronto                       Dufferin, Dovercourt Village\n",
+       " 52           M7H      Not assigned                                       Not assigned\n",
+       " 53           M8H      Not assigned                                       Not assigned\n",
+       " 54           M9H      Not assigned                                       Not assigned\n",
+       " 55           M1J       Scarborough                                Scarborough Village\n",
+       " 56           M2J        North York                       Fairview, Henry Farm, Oriole\n",
+       " 57           M3J        North York                    Northwood Park, York University\n",
+       " 58           M4J         East York      East Toronto, Broadview North (Old East York)\n",
+       " 59           M5J  Downtown Toronto  Harbourfront East, Union Station, Toronto Islands\n",
+       " 60           M6J      West Toronto                           Little Portugal, Trinity\n",
+       " 61           M7J      Not assigned                                       Not assigned\n",
+       " 62           M8J      Not assigned                                       Not assigned\n",
+       " 63           M9J      Not assigned                                       Not assigned\n",
+       " 64           M1K       Scarborough        Kennedy Park, Ionview, East Birchmount Park\n",
+       " 65           M2K        North York                                    Bayview Village\n",
+       " 66           M3K        North York                                          Downsview\n",
+       " 67           M4K      East Toronto                       The Danforth West, Riverdale\n",
+       " 68           M5K  Downtown Toronto           Toronto Dominion Centre, Design Exchange\n",
+       " 69           M6K      West Toronto       Brockton, Parkdale Village, Exhibition Place\n",
+       " 70           M7K      Not assigned                                       Not assigned\n",
+       " 71           M8K      Not assigned                                       Not assigned\n",
+       " 72           M9K      Not assigned                                       Not assigned\n",
+       " 73           M1L       Scarborough                    Golden Mile, Clairlea, Oakridge\n",
+       " 74           M2L        North York                           York Mills, Silver Hills\n",
+       " 75           M3L        North York                                          Downsview\n",
+       " 76           M4L      East Toronto                     India Bazaar, The Beaches West\n",
+       " 77           M5L  Downtown Toronto                     Commerce Court, Victoria Hotel\n",
+       " 78           M6L        North York           North Park, Maple Leaf Park, Upwood Park\n",
+       " 79           M7L      Not assigned                                       Not assigned\n",
+       " 80           M8L      Not assigned                                       Not assigned\n",
+       " 81           M9L        North York                                      Humber Summit\n",
+       " 82           M1M       Scarborough    Cliffside, Cliffcrest, Scarborough Village West\n",
+       " 83           M2M        North York                            Willowdale, Newtonbrook\n",
+       " 84           M3M        North York                                          Downsview\n",
+       " 85           M4M      East Toronto                                    Studio District\n",
+       " 86           M5M        North York                  Bedford Park, Lawrence Manor East\n",
+       " 87           M6M              York   Del Ray, Mount Dennis, Keelsdale and Silverthorn\n",
+       " 88           M7M      Not assigned                                       Not assigned\n",
+       " 89           M8M      Not assigned                                       Not assigned\n",
+       " 90           M9M        North York                                   Humberlea, Emery\n",
+       " 91           M1N       Scarborough                        Birch Cliff, Cliffside West\n",
+       " 92           M2N        North York                        Willowdale, Willowdale East\n",
+       " 93           M3N        North York                                          Downsview\n",
+       " 94           M4N   Central Toronto                                      Lawrence Park\n",
+       " 95           M5N   Central Toronto                                           Roselawn\n",
+       " 96           M6N              York                      Runnymede, The Junction North\n",
+       " 97           M7N      Not assigned                                       Not assigned\n",
+       " 98           M8N      Not assigned                                       Not assigned\n",
+       " 99           M9N              York                                             Weston\n",
+       " 100          M1P       Scarborough  Dorset Park, Wexford Heights, Scarborough Town...\n",
+       " 101          M2P        North York                                    York Mills West\n",
+       " 102          M3P      Not assigned                                       Not assigned\n",
+       " 103          M4P   Central Toronto                                   Davisville North\n",
+       " 104          M5P   Central Toronto    Forest Hill North & West, Forest Hill Road Park\n",
+       " 105          M6P      West Toronto                      High Park, The Junction South\n",
+       " 106          M7P      Not assigned                                       Not assigned\n",
+       " 107          M8P      Not assigned                                       Not assigned\n",
+       " 108          M9P         Etobicoke                                          Westmount\n",
+       " 109          M1R       Scarborough                                  Wexford, Maryvale\n",
+       " 110          M2R        North York                        Willowdale, Willowdale West\n",
+       " 111          M3R      Not assigned                                       Not assigned\n",
+       " 112          M4R   Central Toronto                  North Toronto West, Lawrence Park\n",
+       " 113          M5R   Central Toronto                The Annex, North Midtown, Yorkville\n",
+       " 114          M6R      West Toronto                             Parkdale, Roncesvalles\n",
+       " 115          M7R       Mississauga              Canada Post Gateway Processing Centre\n",
+       " 116          M8R      Not assigned                                       Not assigned\n",
+       " 117          M9R         Etobicoke  Kingsview Village, St. Phillips, Martin Grove ...\n",
+       " 118          M1S       Scarborough                                          Agincourt\n",
+       " 119          M2S      Not assigned                                       Not assigned\n",
+       " 120          M3S      Not assigned                                       Not assigned\n",
+       " 121          M4S   Central Toronto                                         Davisville\n",
+       " 122          M5S  Downtown Toronto                     University of Toronto, Harbord\n",
+       " 123          M6S      West Toronto                                 Runnymede, Swansea\n",
+       " 124          M7S      Not assigned                                       Not assigned\n",
+       " 125          M8S      Not assigned                                       Not assigned\n",
+       " 126          M9S      Not assigned                                       Not assigned\n",
+       " 127          M1T       Scarborough            Clarks Corners, Tam O'Shanter, Sullivan\n",
+       " 128          M2T      Not assigned                                       Not assigned\n",
+       " 129          M3T      Not assigned                                       Not assigned\n",
+       " 130          M4T   Central Toronto                        Moore Park, Summerhill East\n",
+       " 131          M5T  Downtown Toronto          Kensington Market, Chinatown, Grange Park\n",
+       " 132          M6T      Not assigned                                       Not assigned\n",
+       " 133          M7T      Not assigned                                       Not assigned\n",
+       " 134          M8T      Not assigned                                       Not assigned\n",
+       " 135          M9T      Not assigned                                       Not assigned\n",
+       " 136          M1V       Scarborough  Milliken, Agincourt North, Steeles East, L'Amo...\n",
+       " 137          M2V      Not assigned                                       Not assigned\n",
+       " 138          M3V      Not assigned                                       Not assigned\n",
+       " 139          M4V   Central Toronto  Summerhill West, Rathnelly, South Hill, Forest...\n",
+       " 140          M5V  Downtown Toronto  CN Tower, King and Spadina, Railway Lands, Har...\n",
+       " 141          M6V      Not assigned                                       Not assigned\n",
+       " 142          M7V      Not assigned                                       Not assigned\n",
+       " 143          M8V         Etobicoke       New Toronto, Mimico South, Humber Bay Shores\n",
+       " 144          M9V         Etobicoke  South Steeles, Silverstone, Humbergate, Jamest...\n",
+       " 145          M1W       Scarborough                      Steeles West, L'Amoreaux West\n",
+       " 146          M2W      Not assigned                                       Not assigned\n",
+       " 147          M3W      Not assigned                                       Not assigned\n",
+       " 148          M4W  Downtown Toronto                                           Rosedale\n",
+       " 149          M5W  Downtown Toronto                                     Stn A PO Boxes\n",
+       " 150          M6W      Not assigned                                       Not assigned\n",
+       " 151          M7W      Not assigned                                       Not assigned\n",
+       " 152          M8W         Etobicoke                             Alderwood, Long Branch\n",
+       " 153          M9W         Etobicoke                Northwest, West Humber - Clairville\n",
+       " 154          M1X       Scarborough                                        Upper Rouge\n",
+       " 155          M2X      Not assigned                                       Not assigned\n",
+       " 156          M3X      Not assigned                                       Not assigned\n",
+       " 157          M4X  Downtown Toronto                        St. James Town, Cabbagetown\n",
+       " 158          M5X  Downtown Toronto             First Canadian Place, Underground city\n",
+       " 159          M6X      Not assigned                                       Not assigned\n",
+       " 160          M7X      Not assigned                                       Not assigned\n",
+       " 161          M8X         Etobicoke      The Kingsway, Montgomery Road, Old Mill North\n",
+       " 162          M9X      Not assigned                                       Not assigned\n",
+       " 163          M1Y      Not assigned                                       Not assigned\n",
+       " 164          M2Y      Not assigned                                       Not assigned\n",
+       " 165          M3Y      Not assigned                                       Not assigned\n",
+       " 166          M4Y  Downtown Toronto                               Church and Wellesley\n",
+       " 167          M5Y      Not assigned                                       Not assigned\n",
+       " 168          M6Y      Not assigned                                       Not assigned\n",
+       " 169          M7Y      East Toronto  Business reply mail Processing Centre, South C...\n",
+       " 170          M8Y         Etobicoke  Old Mill South, King's Mill Park, Sunnylea, Hu...\n",
+       " 171          M9Y      Not assigned                                       Not assigned\n",
+       " 172          M1Z      Not assigned                                       Not assigned\n",
+       " 173          M2Z      Not assigned                                       Not assigned\n",
+       " 174          M3Z      Not assigned                                       Not assigned\n",
+       " 175          M4Z      Not assigned                                       Not assigned\n",
+       " 176          M5Z      Not assigned                                       Not assigned\n",
+       " 177          M6Z      Not assigned                                       Not assigned\n",
+       " 178          M7Z      Not assigned                                       Not assigned\n",
+       " 179          M8Z         Etobicoke  Mimico NW, The Queensway West, South of Bloor,...\n",
+       " 180          M9Z      Not assigned                                       Not assigned]"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#It's a list and has unstructred data. Let's only capture data which is relevant\n",
+    "df2=df1[0:1]\n",
+    "type(df2)\n",
+    "df2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "pandas.core.frame.DataFrame"
+      ]
+     },
+     "execution_count": 16,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#to convert data into dataframe, first need to convert into nummpy array,then tranpose the list\n",
+    "df2_T0 = np.array(df2[0][0]).T.tolist()\n",
+    "df2_T1 = np.array(df2[0][1]).T.tolist()\n",
+    "df2_T2 = np.array(df2[0][2]).T.tolist()\n",
+    "#noq combine the list and convert into a dataframe\n",
+    "df3=pd.DataFrame(list(zip(df2_T0, df2_T1,df2_T2)),\n",
+    "              columns=['PostalCode','Borough','Neighbourhood'])\n",
+    "type(df3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#drop frist row which has columns names\n",
+    "df4=df3.drop(df3.index[0])\n",
+    "#drop rows where borough='Not assigned'\n",
+    "df5=df4[df4.Borough != 'Not assigned']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#reset the index and check the value\n",
+    "df5.reset_index(drop=True,inplace=True)\n",
+    "df5.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(103, 3)"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df5.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
