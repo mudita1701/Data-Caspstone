@@ -16,6 +16,7 @@ I gathered and prepared the following data using python libraries and APIs as be
  
 •	Extracted the Mumbai Neighborhood details from Wikipedia and were able to get Latitude and Longitude for each area [1]
 •	Extracted venue details using Foursquare API to find shopping malls/theaters in the neighborhood area
-•	Analyzed the neighborhood using K-Means clustering machine learning algorithm and used Silhouette Score to find out the best K for K-Means and used Folium map to visualize clusters into the map
+•	Analyzed the neighborhood using K-Means clustering machine learning algorithm and used Silhouette Score to find out the best K for K-Means and used Folium map to visualize 
+clusters into the map
 •	Extracted Mumbai GeoJosn data from a GitHub library [2] 
 •	Found Mumbai area wise population density details online and used Choropleth map to populate population density for each location [3]
