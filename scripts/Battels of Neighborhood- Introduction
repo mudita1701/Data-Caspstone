@@ -1,22 +1,29 @@
 1.	Introduction
 
-Mumbai is the financial capital and most densely populated city of India. After living a few years in Mumbai, I am keen on bringing a problem around the neighborhood of Mumbai.
-While Mumbai people spend most of their leisure time at malls or theaters, I am bringing out the new potential areas where a real estate company can build new shopping 
-malls/theaters.
-
-To find the best potential location for constructing a shopping mall/theater, I considered two main parameters – 1) total number of current shopping malls/theaters in each area
-and 2) population density for each neighborhood in Mumbai.
-
-An investor would be interested in knowing the statistics of each area in Mumbai through a map where he/she can analyze the Mumbai neighborhood to find 
-the potential areas for building new shopping malls/theaters. 
+Mumbai is the financial capital and most densely populated city of India. Being a crowded city, people likely to spend most of their leisure time at malls for shopping and food and theaters for watching movies. Based on the current numbers of malls/ theaters, I believe that there is a market for new potential malls/theaters for Mumbai.
+ 
+Therefore, through this project, I am bringing a solution for the investors while helping them find new potential areas for constructing and opening new shopping malls/theaters in the neighborhood of Mumbai.
+ 
+This project can help investors to find the new potential areas based on the two main parameters - 1) how many malls/theaters there are in the neighborhood and 2) what the population density is in that neighborhood
  
 2.	Data Description
 
-I gathered and prepared the following data using python libraries and APIs as below:
+Mumbai Neighborhood Details: To start this project, firstly, I need Mumbai Neighborhood details that include Mumbai area name along with their Latitude and Longitude details. I extracted this information through Wikipedia.
  
-•	Extracted the Mumbai Neighborhood details from Wikipedia and were able to get Latitude and Longitude for each area
-•	Extracted venue details using Foursquare API to find shopping malls/theaters in the neighborhood area
-•	Analyzed the neighborhood using K-Means clustering machine learning algorithm and used Silhouette Score to find out the best K for K-Means and used Folium map to visualize 
-clusters into the map
-•	Extracted Mumbai GeoJosn data from a GitHub library 
-•	Found Mumbai area wise population density details online and used Choropleth map to populate population density for each location
+Mumbai Coordinates Details:  I extracted Mumbai’s coordinates details through ‘geolocator’ library to plot Mumbai’s map
+ 
+Foursquare API: I used the Foursquare API to extract the venue details around the coordinate of each area. I captured venue details in a radius of 2.5 km from the coordinates of each area and only considered venue details that area related to shopping malls/ theaters.
+ 
+K-Means Clustering:  I analyzed Mumbai’s neighborhood using the K-Means clustering machine learning algorithm, computed the best K (number of clusters) for K-Means through Silhouette Score, and used Folium map to visualize clusters into Mumbai’s map. 
+
+Mumbai GeoJSON details: I extracted Mumbai GeoJson data online and used them in creating a Choropleth map to create boundaries for each area in Mumbai’s map 
+
+Mumbai Area Wise Population Density:  I extracted area wise population density details online and used Choropleth map to populate population density for each area 
+
+Python Libraries: I used following python libraries writing my python code.
+•	pandas & numpy :  for preparing dataframes
+•	sklearn.cluster & sklearn.metrics : for K-Mean clustering & Silhouette Score
+•	matplotlib & Folium: for plotting maps
+•	geopy: for Mumbai city coordinates
+•	json: For handling Geojson files
+•	requests: library to handle requests
