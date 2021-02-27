@@ -1,20 +1,26 @@
 1.	Introduction
 
-Mumbai is the financial capital and most densely populated city of India. Being a crowded city, people likely to spend most of their leisure time at malls for shopping and food and theaters for watching movies. Based on the current numbers of malls/ theaters, I believe that there is a market for new potential malls/theaters for Mumbai.
+Mumbai is the financial capital and most densely populated city of India. Being a crowded city, people likely to spend most of their leisure time at malls for shopping and food 
+and theaters for watching movies. Based on the current numbers of malls/ theaters, I believe that there is a market for new potential malls/theaters for Mumbai.
  
-Therefore, through this project, I am bringing a solution for the investors while helping them find new potential areas for constructing and opening new shopping malls/theaters in the neighborhood of Mumbai.
+Therefore, through this project, I am bringing a solution for the investors while helping them find new potential areas for constructing and opening new shopping malls/theaters 
+in the neighborhood of Mumbai.
  
-This project can help investors to find the new potential areas based on the two main parameters - 1) how many malls/theaters there are in the neighborhood and 2) what the population density is in that neighborhood
+This project can help investors to find the new potential areas based on the two main parameters - 1) how many malls/theaters there are in the neighborhood and 2) what the 
+population density is in that neighborhood
  
 2.	Data Description
 
-Mumbai Neighborhood Details: To start this project, firstly, I need Mumbai Neighborhood details that include Mumbai area name along with their Latitude and Longitude details. I extracted this information through Wikipedia.
+Mumbai Neighborhood Details: To start this project, firstly, I need Mumbai Neighborhood details that include Mumbai area name along with their Latitude and Longitude details. 
+I extracted this information through Wikipedia.
  
 Mumbai Coordinates Details:  I extracted Mumbai’s coordinates details through ‘geolocator’ library to plot Mumbai’s map
  
-Foursquare API: I used the Foursquare API to extract the venue details around the coordinate of each area. I captured venue details in a radius of 2.5 km from the coordinates of each area and only considered venue details that area related to shopping malls/ theaters.
+Foursquare API: I used the Foursquare API to extract the venue details around the coordinate of each area. I captured venue details in a radius of 2.5 km from the coordinates 
+of each area and only considered venue details that area related to shopping malls/ theaters.
  
-K-Means Clustering:  I analyzed Mumbai’s neighborhood using the K-Means clustering machine learning algorithm, computed the best K (number of clusters) for K-Means through Silhouette Score, and used Folium map to visualize clusters into Mumbai’s map. 
+K-Means Clustering:  I analyzed Mumbai’s neighborhood using the K-Means clustering machine learning algorithm, computed the best K (number of clusters) for K-Means through 
+Silhouette Score, and used Folium map to visualize clusters into Mumbai’s map. 
 
 Mumbai GeoJSON details: I extracted Mumbai GeoJson data online and used them in creating a Choropleth map to create boundaries for each area in Mumbai’s map 
 
